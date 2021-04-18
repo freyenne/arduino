@@ -1,0 +1,48 @@
+void setup() // ledien määritys
+{
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+}
+
+void loop()  // loop-lauseke ledien syttymisen ajastamiseen. Ensimmäinen led syttyy kolmesti, jonka jälkeen kaikki samaan aikaan
+{
+
+  digitalWrite(2, HIGH);  // lauseke sytyttää ja sammuttaa ensimmäisen lampun, toistuu kolmesti.
+  delay(300);
+  digitalWrite(2, LOW);
+  delay(300);
+  digitalWrite(3, LOW);
+  delay(300);
+  digitalWrite(4, LOW);
+  delay(300);
+  
+  digitalWrite(2, HIGH);
+  delay(300);
+  digitalWrite(2, LOW);
+  delay(300);
+  digitalWrite(3, LOW);
+  delay(300);
+  digitalWrite(4, LOW);
+  delay(300);
+  
+  digitalWrite(2, HIGH);
+  delay(300);
+  digitalWrite(2, LOW);
+  delay(300);
+  digitalWrite(3, LOW);
+  delay(300);
+  digitalWrite(4, LOW);
+  delay(300);
+  
+  digitalWrite(2, HIGH); // sytyttää kaikki lamput
+  digitalWrite(3, HIGH);
+  digitalWrite(4, HIGH);
+  delay(300);
+
+  digitalWrite(2, LOW);  // sammuttaa kaikki lamput
+  digitalWrite(3, LOW);
+  digitalWrite(4, LOW);
+  delay(300);
+}
+
