@@ -1,0 +1,27 @@
+int nappi1 = 2;
+int nappi2 = 3;
+int valo1 = 12;
+int napinTila = 0; 
+
+void setup() // ledien määritys
+{
+  Serial.begin(9600);
+  pinMode(valo1, OUTPUT);
+  pinMode (nappi1, INPUT); 
+  pinMode (nappi2, INPUT);
+}
+
+
+void loop()  // Loopissa sytytetään ja sammutetaan valo1 ja lokitetaan led ON, led OFF.
+
+{
+
+ digitalWrite(valo1, HIGH);
+ delay(200);
+ Serial.println(" Led ON " );
+ digitalWrite(valo1, LOW);
+ delay(200);
+ Serial.println(" Led OFF " );
+
+
+}
