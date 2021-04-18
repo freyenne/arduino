@@ -1,0 +1,35 @@
+int nappi = 9;
+int valo1 = 2;
+int valo2 = 3;
+int valo3 = 4;
+int napinTila = 0; 
+
+void setup() // ledien määritys
+  pinMode(valo1, OUTPUT);
+  pinMode(valo2, OUTPUT);
+{
+  pinMode(valo3, OUTPUT);
+  pinMode (nappi, INPUT_PULLUP);
+}
+
+
+}
+void loop() {
+ napinTila = digitalRead(nappi);
+  
+ if (napinTila == HIGH) {
+ digitalWrite(valo1, HIGH);
+ digitalWrite(valo2, HIGH);
+ digitalWrite(valo3, HIGH);
+ delay(1000);
+ digitalWrite(valo1, LOW);
+ digitalWrite(valo2, LOW);
+ digitalWrite(valo3, LOW);
+ delay(1000);
+ }
+else {
+ digitalWrite(valo1, LOW);
+ digitalWrite(valo2, LOW);
+ digitalWrite(valo3, LOW);
+ }
+}
