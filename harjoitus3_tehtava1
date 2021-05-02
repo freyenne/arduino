@@ -1,0 +1,25 @@
+const byte valo1 = 12;
+const byte nappi1 =2;
+volatile byte tila = LOW;
+int laskuri = 0;
+
+void setup() { //määritetään sarjaportti, led, nappi ja keskeytys
+  Serial.begin(9600);
+  pinMode(valo1, OUTPUT);
+  pinMode(nappi1, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(nappi1), blink, CHANGE);
+}
+
+void loop() { // luetaan valo1 ja tila
+  digitalWrite(valo1, tila);
+}
+
+void blink() { // funktio, joka väläyttää lediä, kun nappi painetaan alas
+  
+  if (tila = !tila ) { //jos napin tila on muu, kuin sille määritetty arvo, tulostaa laskurin arvon ja lisää siihen yhden
+    Serial.println(laskuri++);
+  }
+  else {
+    Serial.println(laskuri++); //muutoin tulostaa laskurin arvon ja lisää siihen yhden
+  }
+}
