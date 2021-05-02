@@ -4,8 +4,9 @@ int adc = 0;
 int adcKeskiarvo = 0;
 bool lukumaara = false; 
 float lampotila;
+int jakaja = 0;
 
-void setup() { //määritetään sarjaportti, lämpömittari, nappi ja keskeytys
+void setup() { //määritetään sarjaportti, led, nappi ja keskeytys
   Serial.begin(9600);
   pinMode(A0, INPUT);
   attachInterrupt(digitalPinToInterrupt(nappi1), lueLampotila, CHANGE); // kun nappia painetaan, vaihda funktioon lueLampotila
@@ -15,12 +16,15 @@ void loop() {
   digitalWrite (A0, lampotila);
 }
 
-void lueLampotila() { // funktio, joka lukee lämpötilan 50 kertaa ja tulostaa arvon
+void lueLampotila() { // funktio, joka lukee lämpötilan ja tulostaa arvon
   if (lukumaara == false) {
     for ( int x = 0; x < 50; x++ )
     {	
       lampotila = analogRead(lampomittari);
+      Serial.println("ADC: ");
       Serial.println(lampotila);
+      Serial.println("AvgADC: ");
+      Serial.println(adcKeskiarvo);
     }
     lukumaara = true;
   }
