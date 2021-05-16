@@ -1,0 +1,83 @@
+#define button1Pin 2 //pinni napille 1
+#define button2Pin 3 //pinni napille 2
+#include <EEPROM.h>
+
+volatile byte state = HIGH; 
+int lampotilaSensori = A0; //lämpötilasensorin ohjaava portti
+int sensoriArvo = 0; //muuttuja sensorin arvoa varten
+int adc = 0;
+float LT = 0; //lämpötila
+int kirjoitin = 0; //kirjoitin, joka kertoo, mihin kohtaan EEPROM:ia kirjoitetaan
+int muistipaikanOsoitin = 0; //kokonaislukulaskuri, joka kertoo, missä kohtaa muistia ollaan menossa
+int timer = 0; //ajastimen alustus
+int aiempiArvo = 0;
+int timerValue = 0;
+
+void setup () { //avataan sarjaportti, määritetään napeille funktiot, määritetään ajastin
+  Serial.begin(9600);
+  pinMode(button1Pin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(button1Pin), muistinTulostus, CHANGE);
+  pinMode(button2Pin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(button2Pin), muistinTyhjennys, CHANGE);
+  timer = millis();
+  
+  
+}  
+
+void loop () {
+  if(millis() - timer > 5000) {  //tarkista, onko 5s kulunut
+    muistiinKirjoitus();
+    timer = millis();
+  }
+  if(!digitalRead(button1Pin)) { //tarkista, onko button1Pin painettu
+    muistinTulostus();
+  	delay(300);
+  }
+  if(!digitalRead(button2Pin)) { //tarkista, onko button2Pin painettu
+    muistinTyhjennys();
+    delay(300);
+  }
+  delay(300);
+}
+
+void muistinTulostus () {
+  for (int i = 0; i < EEPROM.length(); i++) { //käydään läpi muistipaikat
+    byte value = EEPROM.read(i);
+    if(value !=0) {
+      LT = value * 4;
+      Serial.println(LT);
+    }
+  }
+}
+void muistinTyhjennys () {
+  for (int i = 0; i < EEPROM.length(); i++) { //käydään läpi muistipaikat
+    if(EEPROM.read(i) != 0) {  //jätetään tyhjät paikat huomioimatta
+      EEPROM.write(i,0); //kirjoitetaan paikkoihin i luku 0
+    }
+  }
+  Serial.println("Muisti tyhjennetty");
+}
+void muistiinKirjoitus () {
+  sensoriArvo = analogRead(lampotilaSensori); //lue sensorin arvo
+  timerValue= timer; //asetetaan timerValuen arvoksi timerin arvo
+  adc = sensoriArvo; //asetetaan ADC:ksi mittausarvo
+  LT = 0.7*adc-77.4; //lasketaan lämpötila
+  
+  if (LT != aiempiArvo) { //jos lämpötila on erisuuri, kuin aiemmin mitattu arvo, kirjoitetaan se muistiin
+  value = value / 4;
+  EEPROM.write(muistipaikanOsoitin, value); //kirjoita luettu arvo sille osoitettuun paikkaan
+  muistipaikanOsoitin = muistipaikanOsoitin++; //kasvatetaan muistipaikkaa yhdellä
+  EEPROM.write(muistipaikanOsoitin, timerValue); //kirjataan muistipaikkaan ajastimen arvo
+  Serial.println("Arvot tallennettu muistipaikkaan"); //tulostetaan teksti ja tallennetut arvot
+  Serial.println(muistipaikanOsoitin);
+  Serial.println(timerValue);
+  muistipaikanOsoitin++; //kasvatetaan muistipaikanosoitinta jälleen yhdellä
+  timer = timer + 5000; //kasvatetaan timeria 5 sekunnilla
+  aiempiArvo = 0 + LT; //asetetaan mitattu lämpötila muuttujaan aiempiArvo
+  if(muistipaikanOsoitin > EEPROM.length()) { //tarkistetaan, onko muistipaikat täynnä ja jos on, tyhjennetään ajastin ja muistipaikat
+    muistipaikanOsoitin = 0;
+    timer = 0;
+  }else{
+    Serial.println("Arvo ei muuttunut");
+  }
+}
